@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8">
+	<title>Crick Ticker</title>
+	<meta name="description" content="Stream marker manipulation for app.net">
+	<meta name="author" content="@mcdemarco">
+
+	<!-- Mobile Specific Metas
+  ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+	<!-- CSS
+  ================================================== -->
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/skeleton.css">
+	<link rel="stylesheet" href="/css/layout.css">
+	<link rel="stylesheet" href="/css/crick.css">
+
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Favicons & Apple Icons
+  ================================================== -->
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<!-- 57x57 -->
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="images/apple-touch-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="images/apple-touch-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="images/apple-touch-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">
+
+	<!-- JS
+  ================================================================================================= -->
+	<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" ></script-->
+	<script src="/js/libs/jquery-1.11.1.min.js"></script>
+	<script src="/js/libs/appnet.5.js"></script>
+	<script src="/js/config.js"></script>
+	<script src="/js/main.js"></script>
+	<script>
+	  $(document).ready(initialize);
+	</script>
+
+</head>
+<body>
+
+
+
+	<!-- Primary Page Layout
+	================================================== -->
+
+	<div class="container">
+		<div class="sixteen columns">
+			<h1><a href="#">Crick Ticker</a></h1>
+		</div>
+		<div class="two-thirds column">
+			<h5>Stream marker management for app.net</h5>
+		</div>
+		<div class="one-third column" style="text-align:right;">
+			<button class="loggedIn" id="logOutButton" style="display:none;margin-top:-10px;" onclick="logout();">Log Out</a>
+		</div>
+
+		<div class="sixteen columns">
+
+			<hr/>
+			<h3 class="about">About Crick Ticker</h3>
+
+			<p class="loggedOut" style="display:none;">Crick Ticker allows you to see and set your stream markers on <a href="http://app.net/">app.net</a>. <a href="#" id="more" onclick="toggleAbout();">[more]</a> 
+
+			<p class="about">
+				Crick Ticker is a stream marker management tool for the social networking platform <a href="http://app.net/">app.net</a>.
+				To view or change your stream markers, you will need a (free) app.net account. 
+			</p>
+
+			<p class="about">
+				By using Crick Ticker you agree to our <a href="/tos.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>.
+			</p>
+
+			<p class="about">
+				Crick Ticker is maintained and hosted by <a href="https://alpha.app.net/mcdemarco">M. C. DeMarco</a>.
+			</p>
+		</div>
+
+		<div id="overview" class="sixteen columns">
+			<div id="crickError"></div>
+			<div><p class="loggedOut" style="display:none;">To begin:</p></div>
+			<div id="loginRequest" class="loggedOut" style="display:none;">
+			  <a href='' class='adn-button' data-type='authorize_v2' data-width="145" data-height="22" >Authorize with App.net</a><script>(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='//d2zh9g63fcvyrq.cloudfront.net/adn.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'adn-button-js'));</script>
+			 <p>An App.net account is required to use Crick Ticker. You can create an account and sign in by clicking this button.</p>
+			</div>
+
+			<div id="streamsHeader" class="loggedIn">
+			 <h3>Your Streams</h3>
+			</div>
+		</div>
+
+		<!--  three columns -->
+		<div class="one-third column" id="col1">
+		</div>
+		<div class="one-third column" id="col2">
+		</div>
+		<div class="one-third column" id="col3">
+		</div>
+
+		<div class="sixteen columns" id="morePastes" style="text-align:right;">
+		  <button class="loggedIn" style="display:none;" onclick="morePosts();">Load More Posts</button>
+		</div>
+
+		<footer class="sixteen columns">
+		  <div>
+		    <a href="#" onclick="toggleAbout();">about</a>
+		    <a href="http://app.net/"><img src="/images/appdotnet-icon-share@2x.png" width="18px" height="18px" /></a>
+		    <a href="http://paste-app.net">paste-app.net</a> 
+		    <a href="http://app.net/"><img src="/images/appdotnet-icon-share@2x.png" width="18px" height="18px" /></a>
+		    <a href="https://alpha.app.net/mcdemarco" target="_blank">@mcdemarco</a>
+		  </div>
+		</footer>
+
+	</div><!-- container -->
+
+
+<!-- End Document
+================================================== -->
+</body>
+</html>

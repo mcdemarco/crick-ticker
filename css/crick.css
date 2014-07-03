@@ -1,0 +1,195 @@
+/* additional styles for crick-ticker */
+
+body {
+    background-color: #fff;
+    background-image: url(/images/background-940.png);
+    background-repeat:no-repeat;
+    background-position: center top;
+    border-top: 4px solid #7E8250;
+    color:#000;
+}
+
+h1 a {
+    text-decoration:none;
+}
+
+div.before, div.after, div.marker {
+    padding:10px 0;
+}
+
+div.after, div.after a {
+    color:#823332;
+}
+div.before, div.before a {
+    color:#7E8250;
+}
+div.marked, div.marked a {
+    color:#000;
+    background-color:#E9EADA;
+}
+
+hr {
+    color: #7E8250;
+    background-color: #7E8250;
+    height: 2px;
+    margin:0px;
+}
+
+.about {
+    display:none;
+}
+
+div#crickError {
+    text-align:center;
+    font-weight:bold;
+    color: #823332;
+    padding-top:5px;
+}
+
+pre, textarea {
+    font-family: monospace;
+    line-height: normal;
+    margin-bottom:5px;
+}
+
+div.view pre code.undefined,
+div.view pre code.markdown,
+div.view pre code.no-highlight {
+    white-space: pre-wrap;
+}
+
+div.view pre code {
+    overflow-y:auto;
+}
+
+div.view div.description {
+    width:99%;
+    padding:2px 4px;
+    border:1px solid gray;
+}
+
+.byline {
+    font-style: italic;
+    padding-top: 2px;
+}
+
+.tags {
+    font-style: italic;
+    vertical-align: top;
+}
+
+span.tags {
+    padding-left: 10%;
+}
+
+div.small .byline a {
+    text-decoration: none;
+}
+
+div.small pre {
+    background-color: #D3D4B6;
+    border: 1px solid gray;
+    padding: 3px;
+    white-space: pre-wrap;
+    overflow: hidden;
+    max-height: 175px;
+}
+
+footer div {
+    text-align:center;
+    padding-bottom:20px;
+    white-space:nowrap;
+}
+
+footer div a {
+    padding: 5px 1%;
+}
+
+footer div a, footer div img {
+    vertical-align:middle;
+}
+
+h1 {
+    padding-top:15px;
+}
+
+body {
+    font-family: "Avenir Next", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h5 {
+    font-family: "Avenir Next", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+}
+
+strong {
+    font-weight: 600;
+}
+
+a#more {
+    color:#878787;
+}
+
+button#logOutButton {
+    margin-bottom: -3px;
+}
+
+textarea#paste-text,
+textarea#paste-description {
+    margin-bottom:3px;
+}
+
+textarea#paste-text {
+    width:99%;
+}
+
+textarea#paste-description {
+    width:99%;
+    min-height:2em;
+}
+
+textarea#paste-description,
+span#pasteCounter {
+    display:inline-block;
+    vertical-align:top;
+}
+
+span#pasteCounter {
+    width:4em;
+}
+
+div.description {
+    display:inline-block;
+    width:80%;
+}
+
+div.smallButtons {
+    display:inline-block;
+    text-align:right;
+    width:20%;
+}
+
+div.formDescription {
+    display:inline-block;
+    vertical-align:bottom;
+    width:75%;
+    margin:0;
+    padding:0;
+}
+
+div.formCounter {
+    display:inline-block;
+    vertical-align:top;
+    margin:0;
+    padding-top:4px;
+/*    padding-left:5px; */
+    width:5%;
+}
+
+div.formButtons {
+    display:inline-block;
+    vertical-align:bottom;
+    text-align:center;
+    width:19%;
+    white-space:nowrap;
+}
