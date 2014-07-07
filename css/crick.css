@@ -14,20 +14,41 @@ h1 a {
 }
 
 div.before, div.after, div.marker, div.spacer {
-    padding:10px 0;
+    font-family: "Georgia", "Times New Roman", serif;
+    padding:10px 5px;
+}
+
+div.marker {
+    text-align:right;
 }
 
 div.spacer {
     text-align:center;
     font-size:larger;
+    color:#7E8250;
 }
 
+span.author, span.author strong {
+    font-family: "Avenir Next", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color:#363822;
+}
+
+span.markButton {
+    cursor:pointer;
+}
+
+span.special {
+    color:#823332;
+}
+
+/*
 div.after, div.after a {
     color:#823332;
 }
 div.before, div.before a {
     color:#7E8250;
 }
+*/
 div.marked, div.marked a {
     color:#000;
     background-color:#E9EADA;

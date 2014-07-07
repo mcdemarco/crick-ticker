@@ -29,7 +29,6 @@ function initialize() {
 }
 
 function getStreams() {
-	//We have the token. Just get user stream for now...
 	var promise1 = $.appnet.post.getUserStream(streamArgs);
 	promise1.then(completeUserStream, function (response) {failAlert('Failed to retrieve user stream.');});
 	var promise2 = $.appnet.post.getUnifiedStream(streamArgs);
@@ -41,17 +40,23 @@ function getStreams() {
 function completeUserStream(response) {
 	$("#col1").append("<h3>User Stream</h3");
 	completeStream(response,1);
+//	var promise = $.appnet.post.getUserStream(restreamArgs);
+//	promise.then(completeStream, function (response) {failAlert('Failed to retrieve user stream.');});
+	//Just assume there's more stream.
+	formatEllipsis(1);
 }
 function completeUnifiedStream(response) {
 	$("#col2").append("<h3>Unified Stream</h3");
 	completeStream(response,2);
+	formatEllipsis(2);
 }
 function completeGlobalStream(response) {
 	$("#col3").append("<h3>Global Stream</h3");
 	completeStream(response,3);
+	formatEllipsis(3);
 }
 
-function completeStream(response,stream,retry) {
+function completeStream(response,stream) {
 	if (response.data.length > 0) {
 		var thisCrick = response.data;
 		var thisTicker = response.meta.marker;
@@ -67,7 +72,7 @@ function completeStream(response,stream,retry) {
 
 	if (response.meta.more == true) {
 		//Not starting at the head of the stream.
-		formatEllipsis(stream);
+		formatEllipsis(stream,true);
 	}
 
 	//Process the stream and marker.
@@ -79,8 +84,7 @@ function completeStream(response,stream,retry) {
 		}
 		formatPost(thisCrick[i],stream,thisTicker);
 	}
-	//Just assume there's more stream.
-	formatEllipsis(stream);
+
 }
 
 /* miscellaneous functions */
@@ -104,23 +108,23 @@ function failAlert(msg) {
 	$('#crickError').html(msg).show().fadeOut(8000);
 }
 
-function formatEllipsis(stream) {
-		$("#col" + stream).append("<div class='spacer'>&hellip;</div><hr/>");
+function formatEllipsis(stream,includeBreak) {
+		$("#col" + stream).append("<div class='spacer'><span class='fa fa-ellipsis-v'></span></div>" + (includeBreak ? "<hr/>" : ""));
 }
 
 function formatLastSeen(marker,stream) {
 	var markerDate = new Date(marker.updated_at);
-	$("#col" + stream).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'><strong>Latest Post Seen: </strong>" + markerDate.toLocaleString() + "</div>");
+	$("#col" + stream).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + " <span class='fa fa-eye'></span></div>");
 }
 
 function formatMarker(marker,stream) {
 	var markerDate = new Date(marker.updated_at);
-	$("#col" + stream).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'><strong>Marker: </strong>" + markerDate.toLocaleString() + ((marker.id != marker.last_read_id) ? "<br/><strong>Latest Post Seen:" + marker.last_read_id + "</strong>" : "") + "</div>");
+	$("#col" + stream).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + ((marker.id == marker.last_read_id) ? " <span class='fa fa-eye'></span>" : "") + " <span class='fa fa-bookmark'></span></div>");
 }
 
 function formatPost(post,stream,marker) {
 	var postDate = new Date(post.created_at);
-	$("#col" + stream).append("<div class='" + (post.id > marker.last_read_id ? "after" : "before") + (post.id == marker.last_read_id ? " marked" : "") + "' " +">" + "<strong>@"+post.user.username+"</strong> (" + post.user.name + ")" + "<br/>" + post.html + "<br/>" + "<div style='text-align:right;'><a style='font-style:italic;text-decoration:none;font-size:smaller;' href='" + post.canonical_url + "'>" + postDate.toLocaleString() + "</a></div></div><hr/>");
+	$("#col" + stream).append("<div class='" + (post.id > marker.last_read_id ? "after" : "before") + (post.id == marker.id ? " marked" : "") + "' " +">" + "<span class='author'><strong>@"+post.user.username+"</strong> (" + post.user.name + ")" + "</span><br/>" + (post.html ? post.html : "<span class='special'>[Post deleted]</span>") + "<br/>" + "<div style='text-align:right;'><a style='font-style:italic;text-decoration:none;font-size:smaller;' href='" + post.canonical_url + "'>" + postDate.toLocaleString() + "</a>" + ((post.id != marker.id) ? " <span onclick='markPost(" + post.id + "," + stream + ");' class='fa fa-bookmark-o markButton'></span>" : "") + "</div></div><hr/>");
 }
 
 function logout() {
@@ -137,6 +141,10 @@ function logout() {
 	$("#col1").html();
 	$("#col2").html();
 	$("#col3").html();
+}
+
+function markPost(id,stream) {
+
 }
 
 function pushHistory(newLocation) {
