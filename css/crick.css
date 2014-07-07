@@ -13,8 +13,13 @@ h1 a {
     text-decoration:none;
 }
 
-div.before, div.after, div.marker {
+div.before, div.after, div.marker, div.spacer {
     padding:10px 0;
+}
+
+div.spacer {
+    text-align:center;
+    font-size:larger;
 }
 
 div.after, div.after a {
@@ -110,6 +115,9 @@ footer div a, footer div img {
 }
 
 h1 {
+    padding-top:20px;
+}
+h2, h3, h4, h5, h6 {
     padding-top:15px;
 }
 
