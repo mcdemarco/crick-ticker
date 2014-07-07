@@ -2,7 +2,8 @@
 
 //To force authorization: https://account.app.net/oauth/authorize etc.
 var authUrl = "https://account.app.net/oauth/authenticate?client_id=" + api['client_id'] + "&response_type=token&redirect_uri=" + encodeURIComponent(crickSite) + "&scope=stream";
-var streamArgs = {count: 5}; //Default post count for retrieval.
+var streamArgs = {count: -5, since_id: 'marker_inclusive'}; //Default post count for retrieval.
+var restreamArgs = {count: 4, before_id: 'marker'};//Default post count for retrieval.
 
 /* main execution path */
 
@@ -50,35 +51,36 @@ function completeGlobalStream(response) {
 	completeStream(response,3);
 }
 
-
 function completeStream(response,stream,retry) {
 	if (response.data.length > 0) {
 		var thisCrick = response.data;
 		var thisTicker = response.meta.marker;
-		var foundTick = false;
 	}
+	if (thisTicker.last_read_id != thisTicker.id) {
+		if (thisTicker.last_read_id >= thisCrick[0].id) {
+			//The last read is in the retrieved stream but not at the marker.
+		} else {
+			//Retrieve and display last read separately.
+			//Also, remove the last read part of formatMarker() when this is done.
+		}
+	}
+
+	if (response.meta.more == true) {
+		//Not starting at the head of the stream.
+		formatEllipsis(stream);
+	}
+
 	//Process the stream and marker.
 	for (var i=0; i < thisCrick.length; i++) {
-		if (thisCrick[i].id == thisTicker.last_read_id) {
-			foundTick = true;
+		if (thisCrick[i].id == thisTicker.id) {
 			formatMarker(thisTicker,stream);
+		} else if (thisCrick[i].id == thisTicker.last_read_id) {
+			formatLastSeen(thisTicker,stream);
 		}
 		formatPost(thisCrick[i],stream,thisTicker);
 	}
-	if (!foundTick) {
-		if (thisTicker.last_read_id < thisCrick[thisCrick.length - 1].id) {
-			//the marker is earlier
-			console.log(thisTicker.last_read_id + " earlier than " + thisCrick[thisCrick.length - 1].id + " for stream " + stream);
-			$("#col" + stream).append("<div class='spacer'>&hellip;</div><hr/>");
-			formatMarker(thisTicker,stream);
-			$("#col" + stream).append("<hr/>");
-		} else if (thisTicker.last_read_id > thisCrick[thisCrick.length - 1].id && thisTicker.last_read_id < thisCrick[0].id) {
-			//The marker may also be on a missing post within the range retrieved.
-			console.log(thisTicker.last_read_id + " between " + thisCrick[thisCrick.length - 1].id + " and " + thisCrick[0].id + " for stream " + stream);
-		} 
-
-		//getMore(stream,thisTicker);
-	}
+	//Just assume there's more stream.
+	formatEllipsis(stream);
 }
 
 /* miscellaneous functions */
@@ -100,6 +102,15 @@ function checkLocalStorage() {
 function failAlert(msg) {
 	document.getElementById("crickError").scrollIntoView();
 	$('#crickError').html(msg).show().fadeOut(8000);
+}
+
+function formatEllipsis(stream) {
+		$("#col" + stream).append("<div class='spacer'>&hellip;</div><hr/>");
+}
+
+function formatLastSeen(marker,stream) {
+	var markerDate = new Date(marker.updated_at);
+	$("#col" + stream).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'><strong>Latest Post Seen: </strong>" + markerDate.toLocaleString() + "</div>");
 }
 
 function formatMarker(marker,stream) {
