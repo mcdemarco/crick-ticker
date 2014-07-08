@@ -4,6 +4,10 @@
 var authUrl = "https://account.app.net/oauth/authenticate?client_id=" + api['client_id'] + "&response_type=token&redirect_uri=" + encodeURIComponent(crickSite) + "&scope=stream";
 var streamArgs = {count: -5, since_id: 'marker_inclusive'}; //Default post count for retrieval.
 var restreamArgs = {count: 4, before_id: 'marker'};//Default post count for retrieval.
+var columnArray = new Array;
+columnArray["my_stream"] = "#col1";
+columnArray["unified"] = "#col2";
+columnArray["global"] = "#col3";
 
 /* main execution path */
 
@@ -29,37 +33,24 @@ function initialize() {
 }
 
 function getStreams() {
+	$(columnArray["my_stream"]).append("<h3>User Stream</h3");
 	var promise1 = $.appnet.post.getUserStream(streamArgs);
-	promise1.then(completeUserStream, function (response) {failAlert('Failed to retrieve user stream.');});
+	promise1.then(completeStream, function (response) {failAlert('Failed to retrieve user stream.');});
+
+	$(columnArray["unified"]).append("<h3>Unified Stream</h3");
 	var promise2 = $.appnet.post.getUnifiedStream(streamArgs);
-	promise2.then(completeUnifiedStream, function (response) {failAlert('Failed to retrieve unified stream.');});
+	promise2.then(completeStream, function (response) {failAlert('Failed to retrieve unified stream.');});
+
+	$(columnArray["global"]).append("<h3>Global Stream</h3");
 	var promise3 = $.appnet.post.getGlobal(streamArgs);
-	promise3.then(completeGlobalStream, function (response) {failAlert('Failed to retrieve global stream.');});
+	promise3.then(completeStream, function (response) {failAlert('Failed to retrieve global stream.');});
 }
 
-function completeUserStream(response) {
-	$("#col1").append("<h3>User Stream</h3");
-	completeStream(response,1);
-//	var promise = $.appnet.post.getUserStream(restreamArgs);
-//	promise.then(completeStream, function (response) {failAlert('Failed to retrieve user stream.');});
-	//Just assume there's more stream.
-	formatEllipsis(1);
-}
-function completeUnifiedStream(response) {
-	$("#col2").append("<h3>Unified Stream</h3");
-	completeStream(response,2);
-	formatEllipsis(2);
-}
-function completeGlobalStream(response) {
-	$("#col3").append("<h3>Global Stream</h3");
-	completeStream(response,3);
-	formatEllipsis(3);
-}
-
-function completeStream(response,stream) {
+function completeStream(response) {
 	if (response.data.length > 0) {
 		var thisCrick = response.data;
 		var thisTicker = response.meta.marker;
+		var thisColumn = columnArray[thisTicker.name];
 	}
 	if (thisTicker.last_read_id != thisTicker.id) {
 		if (thisTicker.last_read_id >= thisCrick[0].id) {
@@ -70,19 +61,39 @@ function completeStream(response,stream) {
 		}
 	}
 
-	if (response.meta.more == true) {
+	if (response.meta.more == true && thisCrick[thisCrick.length - 1].id == thisTicker.id) {
 		//Not starting at the head of the stream.
-		formatEllipsis(stream,true);
+		formatEllipsis(thisColumn,true);
 	}
 
 	//Process the stream and marker.
 	for (var i=0; i < thisCrick.length; i++) {
 		if (thisCrick[i].id == thisTicker.id) {
-			formatMarker(thisTicker,stream);
+			formatMarker(thisTicker,thisColumn);
 		} else if (thisCrick[i].id == thisTicker.last_read_id) {
-			formatLastSeen(thisTicker,stream);
+			formatLastSeen(thisTicker,thisColumn);
 		}
-		formatPost(thisCrick[i],stream,thisTicker);
+		formatPost(thisCrick[i],thisColumn,thisTicker);
+	}
+
+	if (thisCrick[thisCrick.length - 1].id == thisTicker.id) {
+		//We're ending at the marker and have more to retrieve.
+		switch (thisTicker.name) {
+			case "my_stream":
+				var promise = $.appnet.post.getUserStream(restreamArgs);
+				break;
+			case "unified":
+				var promise = $.appnet.post.getUnifiedStream(restreamArgs);
+				break;
+			case "global":
+				var promise = $.appnet.post.getGlobal(restreamArgs);
+				break;
+		}
+
+		promise.then(completeStream, function (response) {failAlert('Failed to retrieve rest of stream.');});
+	} else {
+		//Just assume there's more stream.
+		formatEllipsis(thisColumn);
 	}
 
 }
@@ -108,23 +119,23 @@ function failAlert(msg) {
 	$('#crickError').html(msg).show().fadeOut(8000);
 }
 
-function formatEllipsis(stream,includeBreak) {
-		$("#col" + stream).append("<div class='spacer'><span class='fa fa-ellipsis-v'></span></div>" + (includeBreak ? "<hr/>" : ""));
+function formatEllipsis(column,includeBreak) {
+		$(column).append("<div class='spacer'><span class='fa fa-ellipsis-v'></span></div>" + (includeBreak ? "<hr/>" : ""));
 }
 
-function formatLastSeen(marker,stream) {
+function formatLastSeen(marker,column) {
 	var markerDate = new Date(marker.updated_at);
-	$("#col" + stream).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + " <span class='fa fa-eye'></span></div>");
+	$(column).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + " <span class='fa fa-eye'></span></div>");
 }
 
-function formatMarker(marker,stream) {
+function formatMarker(marker,column) {
 	var markerDate = new Date(marker.updated_at);
-	$("#col" + stream).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + ((marker.id == marker.last_read_id) ? " <span class='fa fa-eye'></span>" : "") + " <span class='fa fa-bookmark'></span></div>");
+	$(column).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + ((marker.id == marker.last_read_id) ? " <span class='fa fa-eye'></span>" : "") + " <span class='fa fa-bookmark'></span></div>");
 }
 
-function formatPost(post,stream,marker) {
+function formatPost(post,column,marker) {
 	var postDate = new Date(post.created_at);
-	$("#col" + stream).append("<div class='" + (post.id > marker.last_read_id ? "after" : "before") + (post.id == marker.id ? " marked" : "") + "' " +">" + "<span class='author'><strong>@"+post.user.username+"</strong> (" + post.user.name + ")" + "</span><br/>" + (post.html ? post.html : "<span class='special'>[Post deleted]</span>") + "<br/>" + "<div style='text-align:right;'><a style='font-style:italic;text-decoration:none;font-size:smaller;' href='" + post.canonical_url + "'>" + postDate.toLocaleString() + "</a>" + ((post.id != marker.id) ? " <span onclick='markPost(" + post.id + "," + stream + ");' class='fa fa-bookmark-o markButton'></span>" : "") + "</div></div><hr/>");
+	$(column).append("<div class='" + (post.id > marker.last_read_id ? "after" : "before") + (post.id == marker.id ? " marked" : "") + "' " +">" + "<span class='author'><strong>@"+post.user.username+"</strong> (" + post.user.name + ")" + "</span><br/>" + (post.html ? post.html : "<span class='special'>[Post deleted]</span>") + "<br/>" + "<div style='text-align:right;'><a style='font-style:italic;text-decoration:none;font-size:smaller;' href='" + post.canonical_url + "'>" + postDate.toLocaleString() + "</a>" + ((post.id != marker.id) ? " <span onclick='markPost(" + post.id + ",\"" + marker.name + "\");' class='fa fa-bookmark-o markButton'></span>" : "") + "</div></div><hr/>");
 }
 
 function logout() {
@@ -138,13 +149,13 @@ function logout() {
 
 	$(".loggedIn").hide();
 	$(".loggedOut").show();
-	$("#col1").html();
-	$("#col2").html();
-	$("#col3").html();
+	$(columnArray["my_stream"]).html("");
+	$(columnArray["unified"]).html("");
+	$(columnArray["global"]).html("");
 }
 
 function markPost(id,stream) {
-
+	//Marker marker.
 }
 
 function pushHistory(newLocation) {
