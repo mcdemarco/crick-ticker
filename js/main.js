@@ -158,7 +158,14 @@ function logout() {
 }
 
 function markPost(id,stream) {
-	//Marker marker.
+	//Pass the current post information into the form.
+	$("#post_id").val(id);
+	$("#last_seen_id").val("");
+	//Set the checkboxes to match stream.
+	$("input[name=crickToTick]").prop("checked",false);
+	$("input#" + stream).prop("checked",true);
+	//Scroll to the form.
+	$('html,body').animate({scrollTop: $("#tickerTicker").offset().top},'slow');
 }
 
 function pushHistory(newLocation) {
