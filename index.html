@@ -100,16 +100,27 @@
 			</div>
 		</div>
 
+		<div class="sixteen columns" id="tickerTicker">
+			<h3>Set Stream Marker(s)</h3>
+			<div class="eight columns alpha" id="tickerTickerEntry">
+				<label for="post_id">Post id: <input type="text" size="15" id="post_id"/></label>
+				<label for="last_seen_id" title="ID of last seen post" placeholder="(optional)">Last seen: <input type="text" size="15" id="last_seen_id"/></label>
+			</div>
+			<div class="eight columns omega" id="tickerTickerTicks">
+				<label for="my_stream"><input type="checkbox" name="crickToTick" id="my_stream" checked="checked"/> User Stream</label>
+				<label for="unified"><input type="checkbox" name="crickToTick" id="unified" checked="checked"/> Unified Stream</label>
+				<label for="global"><input type="checkbox" name="crickToTick" id="global"/> Global Stream</label>
+			</div>
+			<hr />
+		</div>
+
+
 		<!--  three columns -->
 		<div class="one-third column" id="col1">
 		</div>
 		<div class="one-third column" id="col2">
 		</div>
 		<div class="one-third column" id="col3">
-		</div>
-
-		<div class="sixteen columns" id="morePastes" style="text-align:right;">
-		  <button class="loggedIn" style="display:none;" onclick="morePosts();">Load More Posts</button>
 		</div>
 
 		<footer class="sixteen columns">
