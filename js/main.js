@@ -61,9 +61,12 @@ function completeStream(response) {
 		}
 	}
 
-	if (response.meta.more == true && thisCrick[thisCrick.length - 1].id == thisTicker.id) {
-		//Not starting at the head of the stream.
-		formatEllipsis(thisColumn,true);
+	if (thisCrick[thisCrick.length - 1].id == thisTicker.id) {
+		if (response.meta.more == true) {
+			//Not starting at the head of the stream.
+			formatEllipsis(thisColumn);
+		}
+		$(thisColumn).append("<hr />");
 	}
 
 	//Process the stream and marker.
@@ -119,8 +122,8 @@ function failAlert(msg) {
 	$('#crickError').html(msg).show().fadeOut(8000);
 }
 
-function formatEllipsis(column,includeBreak) {
-		$(column).append("<div class='spacer'><span class='fa fa-ellipsis-v'></span></div>" + (includeBreak ? "<hr/>" : ""));
+function formatEllipsis(column) {
+		$(column).append("<div class='spacer'><span class='fa fa-ellipsis-v'></span></div>");
 }
 
 function formatLastSeen(marker,column) {

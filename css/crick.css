@@ -16,6 +16,7 @@ h1 a {
 div.before, div.after, div.marker, div.spacer {
     font-family: "Georgia", "Times New Roman", serif;
     padding:10px 5px;
+    word-wrap: break-word;
 }
 
 div.marker {
