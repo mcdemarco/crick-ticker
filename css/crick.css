@@ -63,9 +63,9 @@ div#tickerTickerEntry {
     padding-bottom:10px;
 }
 
-div#tickerTickerEntry input {
+input#post_id {
     display:inline;
-    margin:2px;
+    margin-bottom:10px;
     width:100px;
 }
 

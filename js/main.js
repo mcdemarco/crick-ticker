@@ -160,7 +160,7 @@ function logout() {
 function markPost(id,stream) {
 	//Pass the current post information into the form.
 	$("#post_id").val(id);
-	$("#last_read_id").val("");
+	$("#reset_last_read").prop("checked",false);
 	//Set the checkboxes to match stream.
 	$("input[name=crickToTick]").prop("checked",false);
 	$("input#" + stream).prop("checked",true);
@@ -181,15 +181,10 @@ function tick() {
 		failAlert('The post id must be a non-negative integer.');
 		return;
 	}
-	var last_read_id = $("#last_read_id").val();
-	if (last_read_id != "" && !intRegex.test(last_read_id)) {
-		failAlert('The last read id must be a non-negative integer.');
-		return;
-	}
 	//Prepare the marker.
 	var markerObj = [];
 	var markerArgs = {};
-	if (last_read_id != "")
+	if ($("#last_read_id").is(":checked"))
 		markerArgs = {reset_read_id: 1};
 
 	$.each(columnArray, function(key, value) {
@@ -197,8 +192,6 @@ function tick() {
 			var thisObj = {};
 			thisObj['name'] = key;
 			thisObj['id'] = post_id;
-			if (last_read_id != "")
-				thisObj['last_read_id'] = last_read_id;
 			markerObj.push(thisObj);
 		}
 	});
@@ -208,8 +201,9 @@ function tick() {
 }
 
 function completeTick(response) {
-debugger;
+	//Clear form and refresh marker by reloading.
 	location.reload();
+	//failAlert(response.meta.code);
 }
 
 function toggleAbout() {
