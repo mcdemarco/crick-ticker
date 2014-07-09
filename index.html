@@ -102,15 +102,19 @@
 
 		<div class="sixteen columns" id="tickerTicker">
 			<h3>Set Stream Marker(s)</h3>
-			<div class="eight columns alpha" id="tickerTickerEntry">
+			<div class="four columns offset-by-two alpha" id="tickerTickerEntry">
 				<label for="post_id">Post id: <input type="text" size="15" id="post_id"/></label>
-				<label for="last_seen_id" title="ID of last seen post" placeholder="(optional)">Last seen: <input type="text" size="15" id="last_seen_id"/></label>
+				<label for="last_read_id" title="ID of last post seen">Last read: <input type="text" size="15" id="last_read_id" placeholder="(optional)" /></label>
 			</div>
-			<div class="eight columns omega" id="tickerTickerTicks">
+			<div class="four columns" id="tickerTickerTicks">
 				<label for="my_stream"><input type="checkbox" name="crickToTick" id="my_stream" checked="checked"/> User Stream</label>
 				<label for="unified"><input type="checkbox" name="crickToTick" id="unified" checked="checked"/> Unified Stream</label>
 				<label for="global"><input type="checkbox" name="crickToTick" id="global"/> Global Stream</label>
 			</div>
+			<div class="four columns" id="tickerTickerTock">
+				<button id="tickButton" onclick="tick();">Set Stream Marker(s)</a>
+			</div>
+			<div class="two columns omega"></div>
 			<hr />
 		</div>
 

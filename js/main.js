@@ -4,7 +4,7 @@
 var authUrl = "https://account.app.net/oauth/authenticate?client_id=" + api['client_id'] + "&response_type=token&redirect_uri=" + encodeURIComponent(crickSite) + "&scope=stream";
 var streamArgs = {count: -5, since_id: 'marker_inclusive'}; //Default post count for retrieval.
 var restreamArgs = {count: 4, before_id: 'marker'};//Default post count for retrieval.
-var columnArray = new Array;
+var columnArray = {};
 columnArray["my_stream"] = "#col1";
 columnArray["unified"] = "#col2";
 columnArray["global"] = "#col3";
@@ -160,7 +160,7 @@ function logout() {
 function markPost(id,stream) {
 	//Pass the current post information into the form.
 	$("#post_id").val(id);
-	$("#last_seen_id").val("");
+	$("#last_read_id").val("");
 	//Set the checkboxes to match stream.
 	$("input[name=crickToTick]").prop("checked",false);
 	$("input#" + stream).prop("checked",true);
@@ -171,6 +171,45 @@ function markPost(id,stream) {
 function pushHistory(newLocation) {
 	if (history.pushState) 
 		history.pushState({}, document.title, newLocation);
+}
+
+function tick() {
+	//Validate.
+	var post_id = $("#post_id").val();
+	var intRegex = /^\d+$/;
+	if (!intRegex.test(post_id)) {
+		failAlert('The post id must be a non-negative integer.');
+		return;
+	}
+	var last_read_id = $("#last_read_id").val();
+	if (last_read_id != "" && !intRegex.test(last_read_id)) {
+		failAlert('The last read id must be a non-negative integer.');
+		return;
+	}
+	//Prepare the marker.
+	var markerObj = [];
+	var markerArgs = {};
+	if (last_read_id != "")
+		markerArgs = {reset_read_id: 1};
+
+	$.each(columnArray, function(key, value) {
+		if ($("#" + key).is(":checked")) {
+			var thisObj = {};
+			thisObj['name'] = key;
+			thisObj['id'] = post_id;
+			if (last_read_id != "")
+				thisObj['last_read_id'] = last_read_id;
+			markerObj.push(thisObj);
+		}
+	});
+	//Set the stream marker(s).
+	var promiseTick = $.appnet.marker.update(markerObj, markerArgs);
+	promiseTick.then(completeTick, function (response)  {failAlert('Failed to update stream marker(s).');});
+}
+
+function completeTick(response) {
+debugger;
+	location.reload();
 }
 
 function toggleAbout() {
