@@ -188,7 +188,7 @@ function tick() {
 	//Prepare the marker.
 	var markerObj = [];
 	var markerArgs = {};
-	if ($("#last_read_id").is(":checked"))
+	if ($("#reset_last_read").is(":checked"))
 		markerArgs = {reset_read_id: 1};
 
 	$.each(columnArray, function(key, value) {
