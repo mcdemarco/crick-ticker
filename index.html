@@ -67,7 +67,8 @@
 			<h5>Stream marker management for app.net</h5>
 		</div>
 		<div class="one-third column" style="text-align:right;">
-			<button class="loggedIn" id="logOutButton" style="display:none;margin-top:-10px;" onclick="logout();">Log Out</a>
+			<button type="button" id="aboutButton" onclick="toggleAbout();">About</button>
+			<button type="button" class="loggedIn" id="logOutButton" style="display:none;" onclick="logout();">Log Out</button>
 		</div>
 
 		<div class="sixteen columns">
@@ -80,14 +81,22 @@
 			<p class="about">
 				Crick Ticker is a stream marker management tool for the social networking platform <a href="http://app.net/">app.net</a>.
 				To view or change your stream markers, you will need a (free) app.net account. 
+			</p> 
+
+			<p class="about">
+				Stream markers are the <a href="https://developers.app.net/reference/resources/stream-marker/">back-end mechanism</a> for tracking your position in streams of posts on App.net.  Crick Ticker displays the markers for your last read post (<span class="fa fa-eye"></span>) and your current position (<span class="fa fa-bookmark"></span>); usually these are the same post.  Surrounding posts are included for context.  Crick Ticker handles three streams: your personal stream, your unified stream (including mentions of @you), and the global stream.  
 			</p>
 
 			<p class="about">
-				By using Crick Ticker you agree to our <a href="/tos.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>.
+				Crick Ticker also allows you to set your stream marker to any post, for any of the three streams. (Crick Ticker is not responsible for the consequences of setting a marker to a post that is not actually in that stream.)  Enter a post ID in the Set Stream Marker(s) form and check off the stream(s) you want to mark, then click the Set Stream Marker(s) button.  You can also use the <span class="fa fa-bookmark-o"></span> button to fill in the form with the details of a particular post. 
 			</p>
 
 			<p class="about">
-				Crick Ticker is maintained and hosted by <a href="https://alpha.app.net/mcdemarco">M. C. DeMarco</a>.
+				If you are moving the stream marker earlier than the last read post, you can optionally move the last read marker as well by checking the "Reset last read to here" checkbox.  If you are advancing your stream marker beyond the last read post, the last read marker will follow automatically (so the checkbox will have no effect).
+			</p>
+
+			<p class="about">
+				By using Crick Ticker you agree to our <a href="/tos.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>.  Crick Ticker is maintained and hosted by <a href="https://alpha.app.net/mcdemarco">@mcdemarco</a>.
 			</p>
 		</div>
 
@@ -130,6 +139,8 @@
 		<footer class="sixteen columns">
 		  <div>
 		    <a href="#" onclick="toggleAbout();">about</a>
+		    <a href="http://app.net/"><img src="/images/appdotnet-icon-share@2x.png" width="18px" height="18px" /></a>
+		    <a href="http://crick-ticker.mcdemarco.net">crick-ticker.mcdemarco.net</a> 
 		    <a href="http://app.net/"><img src="/images/appdotnet-icon-share@2x.png" width="18px" height="18px" /></a>
 		    <a href="http://paste-app.net">paste-app.net</a> 
 		    <a href="http://app.net/"><img src="/images/appdotnet-icon-share@2x.png" width="18px" height="18px" /></a>

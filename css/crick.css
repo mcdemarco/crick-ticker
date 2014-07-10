@@ -192,7 +192,9 @@ a#more {
     color:#878787;
 }
 
+button#aboutButton,
 button#logOutButton {
+    margin-top:-10px;
     margin-bottom: -3px;
 }
 
