@@ -2,8 +2,9 @@
 
 //To force authorization: https://account.app.net/oauth/authorize etc.
 var authUrl = "https://account.app.net/oauth/authenticate?client_id=" + api['client_id'] + "&response_type=token&redirect_uri=" + encodeURIComponent(crickSite) + "&scope=stream";
-var streamArgs = {count: -5, since_id: 'marker_inclusive'}; //Default post count for retrieval.
-var restreamArgs = {count: 4, before_id: 'marker'};//Default post count for retrieval.
+var streamArgs = {count: -5, since_id: 'last_read_inclusive'}; //Default post count for retrieval.
+var restreamArgsInclusive = {count: 5, before_id: 'marker_inclusive'};
+var restreamArgsExclusive = {count: 4, before_id: 'marker'};
 var columnArray = {};
 columnArray["my_stream"] = "#col1";
 columnArray["unified"] = "#col2";
@@ -52,18 +53,10 @@ function completeStream(response) {
 		var thisTicker = response.meta.marker;
 		var thisColumn = columnArray[thisTicker.name];
 	}
-	if (thisTicker.last_read_id != thisTicker.id) {
-		if (thisTicker.last_read_id >= thisCrick[0].id) {
-			//The last read is in the retrieved stream but not at the marker.
-		} else {
-			//Retrieve and display last read separately.
-			//Also, remove the last read part of formatMarker() when this is done.
-		}
-	}
 
-	if (thisCrick[thisCrick.length - 1].id == thisTicker.id) {
+	if (thisCrick[thisCrick.length - 1].id == thisTicker.last_read_id) {
 		if (response.meta.more == true) {
-			//Not starting at the head of the stream.
+			//First call, but not starting at the head of the stream.
 			formatEllipsis(thisColumn);
 		}
 		$(thisColumn).append("<hr />");
@@ -79,8 +72,19 @@ function completeStream(response) {
 		formatPost(thisCrick[i],thisColumn,thisTicker);
 	}
 
-	if (thisCrick[thisCrick.length - 1].id == thisTicker.id) {
+	if (thisCrick[thisCrick.length - 1].id == thisTicker.last_read_id) {
 		//We're ending at the marker and have more to retrieve.
+		if (thisTicker.id == thisTicker.last_read_id) {
+			//We got the real marker as the last read marker and can skip it in the request.
+			var restreamArgs = restreamArgsExclusive;
+		} else {
+			//The marker and last read marker are different, so:
+			//include the marker next time,
+			var restreamArgs = restreamArgsInclusive;
+			//and indicate the break.
+			formatEllipsis(thisColumn);
+			$(thisColumn).append("<hr />");
+		}
 		switch (thisTicker.name) {
 			case "my_stream":
 				var promise = $.appnet.post.getUserStream(restreamArgs);
