@@ -137,12 +137,12 @@ function formatLastSeen(marker,column) {
 
 function formatMarker(marker,column) {
 	var markerDate = new Date(marker.updated_at);
-	$(column).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + ((marker.id == marker.last_read_id) ? " <span class='fa fa-eye'></span>" : "") + " <span class='fa fa-bookmark'></span></div>");
+	$(column).append("<div class='marker marked' title='Version: " + marker.version + ", Percentage: " + marker.percentage + "'>" + markerDate.toLocaleString() + ((marker.id == marker.last_read_id) ? " <span class='fa fa-eye'></span>" : "") + " <span onclick='markPost(" + marker.id + ",\"" + marker.name + "\"" + ", true);' class='fa fa-bookmark markButton' title='Set other markers and/or last read to post " + marker.id + "'></span></div>");
 }
 
 function formatPost(post,column,marker) {
 	var postDate = new Date(post.created_at);
-	$(column).append("<div class='" + (post.id > marker.last_read_id ? "after" : "before") + (post.id == marker.id ? " marked" : "") + "' " +">" + "<span class='author'><strong>@"+post.user.username+"</strong>" + (post.user.name ? " (" + post.user.name + ")" : "") + "</span><br/>" + (post.html ? post.html : "<span class='special'>[Post deleted]</span>") + "<br/>" + "<div style='text-align:right;'><a style='font-style:italic;text-decoration:none;font-size:smaller;' href='" + post.canonical_url + "'>" + postDate.toLocaleString() + "</a>" + ((post.id != marker.id) ? " <span onclick='markPost(" + post.id + ",\"" + marker.name + "\");' class='fa fa-bookmark-o markButton'></span>" : "") + "</div></div><hr/>");
+	$(column).append("<div class='" + (post.id > marker.last_read_id ? "after" : "before") + (post.id == marker.id ? " marked" : "") + "' " +">" + "<span class='author'><strong>@"+post.user.username+"</strong>" + (post.user.name ? " (" + post.user.name + ")" : "") + "</span><br/>" + (post.html ? post.html : "<span class='special'>[Post deleted]</span>") + "<br/>" + "<div style='text-align:right;'><a style='font-style:italic;text-decoration:none;font-size:smaller;' href='" + post.canonical_url + "'>" + postDate.toLocaleString() + "</a>" + ((post.id != marker.id) ? " <span onclick='markPost(" + post.id + ",\"" + marker.name + "\");' class='fa fa-bookmark-o markButton' title='Set marker to post " + post.id + "'></span>" : "") + "</div></div><hr/>");
 }
 
 function logout() {
@@ -161,13 +161,22 @@ function logout() {
 	$(columnArray["global"]).html("");
 }
 
-function markPost(id,stream) {
+function markPost(id,stream,marked) {
 	//Pass the current post information into the form.
 	$("#post_id").val(id);
-	$("#reset_last_read").prop("checked",false);
 	//Set the checkboxes to match stream.
-	$("input[name=crickToTick]").prop("checked",false);
-	$("input#" + stream).prop("checked",true);
+	if (marked) {
+		$("#reset_last_read").prop("checked",true);
+		if (stream == "global")
+			$("input[name=crickToTick]").prop("checked",false);
+		else
+			$("input[name=crickToTick]").prop("checked",true);
+		$("input#" + stream).prop("checked",true);
+	} else {
+		$("#reset_last_read").prop("checked",false);
+		$("input[name=crickToTick]").prop("checked",false);
+		$("input#" + stream).prop("checked",true);
+	}
 	//Scroll to the form.
 	$('html,body').animate({scrollTop: $("#tickerTicker").offset().top},'slow');
 }
